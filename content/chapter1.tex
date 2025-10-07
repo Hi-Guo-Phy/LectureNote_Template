@@ -1,0 +1,241 @@
+% content/chapter1.tex
+\section{The Geometric Interpretation of Systems of Equations}
+
+    \subsection{Two equations, two unknowns}
+        \indent We have the following system of equations:
+            \begin{subequations} \label{eq:ex1}
+               \begin{empheq}[left=\empheqlbrace]{align}
+                    2x-y &= 0 \label{eq:ex1_a} \\
+                    -x + 2y &= 3 \label{eq:ex1_b}
+                \end{empheq}
+            \end{subequations}
+             
+        
+        First, let's observe the system from the perspective of a matrix.
+        From the system,we can extract the coefficient matrix:
+            \begin{equation}
+                \mathbf{A} = 
+                \begin{bmatrix}
+                    2 & -1 \\
+                    -1 & 2
+                \end{bmatrix} \label{eq:ex1_coefficient}
+            \end{equation}
+        the unknown vector:
+            \begin{equation}
+                \mathbf{x} = 
+                \begin{bmatrix}
+                    x \\
+                    y
+                \end{bmatrix} \label{eq:ex1_unknown}
+            \end{equation}
+        and the right vector is:
+            \begin{equation}
+                \mathbf{b} = 
+                \begin{bmatrix}
+                    0 \\
+                    3
+                \end{bmatrix} \label{eq:ex1_right}
+            \end{equation}
+        so the system of equations can be written in matrix form:
+            \begin{equation}
+                \mathbf{A} \mathbf{x} = \mathbf{b}
+            \end{equation}
+
+        Second, we give the \textbf{row picture}. We can find that, 
+        each row of \eqref{eq:ex1} corresponds to a staright line. 
+        Draw it on the rectangular coordinate system of a plane:
+            \inserttikzpicture
+                { % 第一个参数: TikZ 绘图代码
+                    % 1. 坐标轴范围
+                    \def\xmin{-3}
+                    \def\xmax{3}
+                    \def\ymin{-3}
+                    \def\ymax{3}
+                    
+                    % 添加刻度
+                    \draw[->, thick] (\xmin, 0) -- (\xmax, 0) node[below] {$x$};
+                    \draw[->, thick] (0, \ymin) -- (0, \ymax) node[left] {$y$};
+                    \node[below left, font=\tiny] at (0,0) {$O$};
+                    \foreach \x in {-2,-1,1,2} {
+                        \draw (\x, 0.1) -- (\x, -0.1) node[below] {$\x$};
+                    }
+                    \foreach \y in {-2,-1,1,2} {
+                        \draw (0.1, \y) -- (-0.1, \y) node[left] {$\y$};
+                    }
+                    % 添加网格
+                    \draw[gray!50, dashed, very thin] (\xmin, \ymin) grid (\xmax, \ymax);
+                    % 裁剪区域
+                    \clip (\xmin, \ymin) rectangle (\xmax, \ymax);                 
+                    % 绘制直线 
+                    \draw[domain=\xmin:\xmax, color=blue, thick, samples=100]
+                        plot (\x, {2*\x});
+                    \draw[domain=\xmin:\xmax, color=red, thick, samples=100]
+                        plot (\x, {0.5*\x + 1.5});
+                    % 使用绝对坐标放置标签
+                    \node[blue,right] at (0.3, 0.5) {$2x-y=0$};
+                    \node[red, right] at (-2, 0.5) {$-x+2y=3$};
+                    % 标记交点 (依然使用绝对坐标)
+                    \filldraw[black] (1,2) circle (2pt) node[right] at (1,2) {$(1, 2)$};
+                }
+                {Two lines intersect} % 第二个参数: 图片标题
+                {fig:two_lines_intersect} % 第三个参数: 图片标签
+        \noindent The intersection point $(1,2)$ is the solution of \eqref{eq:ex1}.
+
+        Finally, we give the \textbf{column picture}.We can write the system in the below form:
+            \begin{equation}
+                x
+                \begin{bmatrix}
+                    2\\
+                    -1
+                \end{bmatrix} + 
+                y
+                \begin{bmatrix}
+                    -1\\
+                    2
+                \end{bmatrix} = 
+                \begin{bmatrix}
+                    0\\
+                    3
+                \end{bmatrix} \label{eq:ex1_column}
+            \end{equation}
+        We can understand the above formula as the \textbf{linear combination of column vectors}:
+            \inserttikzpicture
+                { % 第一个参数: TikZ 绘图代码
+                    % 1.坐标轴范围及定义
+                    \def\xmin{-1}
+                    \def\xmax{3}
+                    \def\ymin{-1}
+                    \def\ymax{3}
+                    % 绘制坐标轴
+                    \draw[->, thick, -{Stealth[length=2.5mm]}] (\xmin, 0) -- (\xmax, 0) node[below] {$x$};
+                    \draw[->, thick, -{Stealth[length=2.5mm]}] (0, \ymin) -- (0, \ymax) node[left] {$y$};
+                    \node[below left, font=\tiny] at (0,0) {$O$}; % 标记原点
+                    % 3. 网格和刻度
+                    \draw[gray!30, dashed, thin] (\xmin, \ymin) grid (\xmax, \ymax);
+                    \foreach \x in {\xmin,...,\xmax} {
+                        \ifnum\x=0\relax\else % 跳过原点
+                            \ifnum\x<\xmax\relax
+                                \draw (\x, 0.1) -- (\x, -0.1) node[below] {$\x$};
+                            \fi
+                        \fi
+                    }
+                    \foreach \y in {\ymin,...,\ymax} {
+                        \ifnum\y=0\relax\else % 跳过原点
+                            \ifnum\y<\ymax\relax
+                                \draw (0.1, \y) -- (-0.1, \y) node[left] {$\y$};
+                            \fi
+                        \fi
+                    }
+                    % 4.绘制三个箭头向量
+                    % 向量 a: (-1, 2) 
+                    \draw[->, black, thick, -{Stealth[length=3mm, width=2mm]}] (0,0) -- (-1,2) node[above, black] {$(-1,2)$};
+                    % 向量 b: (0, 3) 
+                    \draw[->, red, thick, -{Stealth[length=3mm, width=2mm]}] (0,0) -- (0,3) node[right, red] {$(0,3)$};
+                    % 向量 c: (2, -1) 
+                    \draw[->, black, thick, -{Stealth[length=3mm, width=2mm]}] (0,0) -- (2,-1) node[right, black] {$(2,-1)$};
+                }
+                {Column Picture} % 第二个参数: 图片标题
+                {fig:three_vectors} % 第三个参数: 图片标签
+        
+    \subsection{A simple summary}
+        In the previous subsection, we use matrix form, row picture, column picture to describe
+        the system of equations. And the most important point is the column picture.
+
+        The column picture tells us that, we can use the linear combination of two vectors (satisfied certain conditions)
+        to obtain the third vector.
+
+        \textbf{Note}:If we take x and y as any combination of numbers,
+        than the linear combination of tow vectors (satisfied certain conditions) can obtain every vectors in the plane. 
+    
+    \subsection{Three equations,three unknowns}
+        We have the following system of equations:
+            \begin{subequations} \label{eq:ex2}
+               \begin{empheq}[left=\empheqlbrace]{align}
+                    2x-y &= 0  \\
+                    -x + 2y -z &= 3 \\
+                    -3y + 4z &= 4
+                \end{empheq}
+            \end{subequations}
+        First, let's give the matrix form. The coefficient matrix is:
+            \begin{equation} \label{eq:ex2_A}
+                \mathbf{A} = 
+                \begin{bmatrix}
+                    2 & -1 & 0 \\
+                    -1 & 2 & -1 \\
+                    0 & -3 & 4 
+                \end{bmatrix}
+            \end{equation}
+        the unkown vector:
+            \begin{equation}
+                \mathbf{x} = 
+                \begin{bmatrix}
+                    x \\
+                    y \\
+                    z 
+                \end{bmatrix}
+            \end{equation}
+        and the right vector is:
+            \begin{equation}
+                \mathbf{b} = 
+                \begin{bmatrix}
+                    0 \\
+                    -1 \\
+                    4 
+                \end{bmatrix}
+            \end{equation}
+        so the system can be written:
+            \begin{equation}
+                \mathbf{Ax = b}
+            \end{equation}
+        
+        Second, the row picture. With the aid of the geometric knowledge, we know that,
+        every row of \eqref{eq:ex2} corresponds to a plane in 3-D space.
+
+        Finally, the column picture. Below:
+            \begin{equation} \label{eq:ex2_column}
+                x
+                \begin{bmatrix}
+                    2 \\ 
+                    -1\\
+                    3
+                \end{bmatrix} + 
+                y
+                \begin{bmatrix}
+                    -1 \\ 
+                    2\\
+                    -3
+                \end{bmatrix} + 
+                z
+                \begin{bmatrix}
+                    0 \\ 
+                    -1\\
+                    4
+                \end{bmatrix} = 
+                \begin{bmatrix}
+                    0 \\ 
+                    -1\\
+                    4
+                \end{bmatrix} 
+            \end{equation}
+        As x, y and z are scalars, so the left-side of \eqref{eq:ex2_column} is the linear combination of three vectors.
+        And easily, the solution is:
+            \begin{equation}
+                \begin{bmatrix}
+                    0\\
+                    0\\
+                    1
+                \end{bmatrix}
+            \end{equation}
+        
+    \subsection{Extended thinking}
+        In the previous subsection, we get the solution of \eqref{eq:ex2}.
+
+        So, for the fixed A \eqref{eq:ex2_A}, can I solve $\mathbf{Ax=b}$ for any $\mathbf{b}$?
+        Or, in the linear combination words, the problem is: Using any combination of ($x,y,z$), 
+        can I probuce any vectors in a 3-D space?
+        
+        For A\eqref{eq:ex2_A}, the answer is YES. Then in what case, the answer is NO? 
+
+        We can give an example: Three vectors in $\mathbf{A}$ are in the same plane. 
+        In this case, we could't get any vector outside the plane.
+        
